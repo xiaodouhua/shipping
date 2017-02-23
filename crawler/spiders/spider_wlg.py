@@ -2,6 +2,7 @@ import json
 import scrapy
 import math
 import logging
+import re
 from scrapy import FormRequest, Selector
 from items import ItemWlg
 
@@ -25,7 +26,7 @@ class SpiderWlg(scrapy.Spider):
         for record in Selector(text=sb).xpath('//div[@id="main-booking2"]'):
             try:
                 yield self.parse_record(record)
-            except ValueError as e:
+            except Exception as e:
                 logger.error(e)
                 continue
 
@@ -35,6 +36,12 @@ class SpiderWlg(scrapy.Spider):
                 yield self.make_request(i)
 
     def parse_record(self, record):
+        """
+        返回的文档结构有问题，每个record都会包含剩下所有的record
+        :param record:
+        :return:
+        """
+
         def safe_cast_price(s):
             try:
                 return int(s.replace('$', '').strip())
@@ -52,15 +59,20 @@ class SpiderWlg(scrapy.Spider):
         if method is not None and method.find('中转') >= 0:
             transit_port = method.replace('中转', '').strip()
 
-        price = record.xpath('div[2]/ul/li[3]/div/div[@class="yunred yunlist"]/text()')
-        price_20gp = safe_cast_price(price[0].extract())
-        price_40gp = safe_cast_price(price[1].extract())
-        price_40hq = safe_cast_price(price[2].extract())
+        prices = re.findall('<div class="yunred yunlist">\$(\d+)</div>', record.extract())
+        if len(prices) >= 3:
+            price_20gp = safe_cast_price(prices[0])
+            price_40gp = safe_cast_price(prices[1])
+            price_40hq = safe_cast_price(prices[2])
+        else:
+            price_20gp = None
+            price_40gp = None
+            price_40hq = None
 
         company = record.xpath('div[2]/ul/li[4]/text()[1]').extract_first()
         company = company.strip() if company else None
 
-        route = record.xpath('div[2]/ul/li[4]/text()[1]').extract_first()
+        route = record.xpath('div[2]/ul/li[4]/text()[2]').extract_first()
         route = route.strip() if route else None
 
         wharf = record.xpath('div[2]/ul/li[5]/text()').extract_first()

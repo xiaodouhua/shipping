@@ -1,8 +1,8 @@
 import logging
 from peewee import IntegrityError
-from models import TableWlg
+from crawler.models import TableWlg
 
-from spiders.spider_wlg import SpiderWlg
+from crawler.spiders.spider_wlg import SpiderWlg
 
 
 class PipelineWlg(object):

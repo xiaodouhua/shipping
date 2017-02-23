@@ -4,7 +4,7 @@ import math
 import logging
 import re
 from scrapy import FormRequest, Selector
-from items import ItemWlg
+from crawler.items import ItemWlg
 
 logger = logging.getLogger('SpiderWlg')
 

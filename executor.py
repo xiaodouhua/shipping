@@ -6,7 +6,9 @@ from scrapy.utils import project, log
 from scrapy.cmdline import execute
 from scrapy.settings.default_settings import LOG_FORMAT
 
-from models import create_tables
+from crawler.models import create_tables
+
+# 0 5 * * * executor.py crawl wlg
 
 if __name__ == '__main__':
 

@@ -1,8 +1,8 @@
 import logging
 from peewee import IntegrityError
-from crawler.models import TableWlg
+from crawler.models import TableWlg, TableJc56
 
-from crawler.spiders.spider_wlg import SpiderWlg
+from crawler.spiders import SpiderWlg, SpiderJc56, SpiderJc56Full
 
 
 class PipelineWlg(object):
@@ -16,4 +16,18 @@ class PipelineWlg(object):
                 self.logger.info("Got item. uid:{:s}".format(item['uid']))
             except IntegrityError:
                 self.logger.warning("Item already exists. uid:{:s}".format(item['uid']))
+        return item
+
+
+class PipelineJc56(object):
+    def __init__(self):
+        self.logger = logging.getLogger('PipelineJc56')
+
+    def process_item(self, item, spider):
+        if spider.name in [SpiderJc56.name, SpiderJc56Full.name]:
+            try:
+                TableJc56.create(**dict(item))
+                self.logger.info("Got item. uid:{:d}".format(item['uid']))
+            except IntegrityError:
+                self.logger.warning("Item already exists. uid:{:d}".format(item['uid']))
         return item

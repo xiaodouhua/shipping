@@ -1,4 +1,2 @@
-# This package will contain the spiders of your Scrapy project
-#
-# Please refer to the documentation for information on how to create and manage
-# your spiders.
+from .spider_wlg import SpiderWlg
+from .spider_jc56 import SpiderJc56, SpiderJc56Full

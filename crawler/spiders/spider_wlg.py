@@ -10,7 +10,12 @@ logger = logging.getLogger('SpiderWlg')
 
 
 class SpiderWlg(scrapy.Spider):
-    name = "wlg"  # http://www.e-wlg.com/
+    """
+    http://www.e-wlg.com/
+
+    uid 格式 "%y%m%d00{:d}" 后面为3位数，从0开始排。可以从订舱页面获取详细信息，截关日期到了之后就查不到了
+    """
+    name = "wlg"
 
     def start_requests(self):
         yield self.make_request()

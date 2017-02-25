@@ -1,4 +1,5 @@
-from peewee import Model, MySQLDatabase, IntegerField, DateField, CharField, TextField
+import datetime
+from peewee import Model, MySQLDatabase, IntegerField, DateField, CharField, TextField, DateTimeField
 
 db = MySQLDatabase('shipping', host="localhost", port=3306, user="root", passwd="19961020")
 
@@ -10,6 +11,7 @@ class BaseModel(Model):
 
 class TableWlg(BaseModel):
     uid = CharField(primary_key=True)
+    scraped_time = DateTimeField(default=datetime.datetime.now)
     starting_port = CharField(null=True)
     destination_port = CharField(null=True)
     transit_port = CharField(null=True)
@@ -31,6 +33,7 @@ class TableWlg(BaseModel):
 
 class TableJc56(BaseModel):
     uid = IntegerField(primary_key=True)
+    scraped_time = DateTimeField(default=datetime.datetime.now)
     starting_port = CharField(null=True)
     destination_port = CharField(null=True)
     transit_port = CharField(null=True)

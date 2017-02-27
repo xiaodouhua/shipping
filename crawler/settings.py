@@ -19,7 +19,8 @@ TELNETCONSOLE_ENABLED = False
 
 ITEM_PIPELINES = {
     'crawler.pipelines.PipelineWlg': 300,
-    'crawler.pipelines.PipelineJc56': 301
+    'crawler.pipelines.PipelineJc56': 301,
+    'crawler.pipelines.PipelineBfb56': 301
 }
 
 LOG_FILE = 'shipping.log'

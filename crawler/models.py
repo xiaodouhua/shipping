@@ -53,5 +53,26 @@ class TableJc56(BaseModel):
         db_table = 'jc56'
 
 
+class TableBfb56(BaseModel):
+    uid = CharField(primary_key=True)
+    scraped_time = DateTimeField(default=datetime.datetime.now)
+    starting_port = CharField(null=True)
+    starting_port_en = CharField(null=True)
+    destination_port = CharField(null=True)
+    destination_port_en = CharField(null=True)
+    company = CharField(null=True)
+    valid_date = CharField(null=True)
+    duration = IntegerField(null=True)
+    schedule = CharField(null=True)
+    cargo_type = CharField(null=True)
+    price_20gp = IntegerField(null=True)
+    price_40gp = IntegerField(null=True)
+    price_40hq = IntegerField(null=True)
+    url = CharField()
+
+    class Meta:
+        db_table = 'bfb56'
+
+
 def create_tables():
-    db.create_tables([TableWlg, TableJc56], safe=True)
+    db.create_tables([TableWlg, TableJc56, TableBfb56], safe=True)

@@ -35,3 +35,20 @@ class ItemJc56(Item):
     price_40hq = Field()
     surcharge = Field()
     remarks = Field()
+
+
+class ItemBfb56(Item):
+    uid = Field()
+    starting_port = Field()
+    starting_port_en = Field()
+    destination_port = Field()
+    destination_port_en = Field()
+    company = Field()
+    valid_date = Field()
+    duration = Field()
+    schedule = Field()
+    cargo_type = Field()
+    price_20gp = Field()
+    price_40gp = Field()
+    price_40hq = Field()
+    url = Field()

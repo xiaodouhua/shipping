@@ -74,5 +74,31 @@ class TableBfb56(BaseModel):
         db_table = 'bfb56'
 
 
+class TableUfsoo(BaseModel):
+    uid = CharField(primary_key=True)
+    scraped_time = DateTimeField(default=datetime.datetime.now)
+    starting_port = CharField(null=True)
+    starting_port_en = CharField(null=True)
+    destination_port = CharField(null=True)
+    destination_port_en = CharField(null=True)
+    transit_port = CharField(null=True)
+    transit_port_en = CharField(null=True)
+    route = CharField(null=True)
+    company = CharField(null=True)
+    company_en = CharField(null=True)
+    duration = IntegerField(null=True)
+    date_cut_off = CharField(null=True)
+    date_set_sail = CharField(null=True)
+    valid_from_date = CharField(null=True)
+    valid_to_date = CharField(null=True)
+    currency_unit = CharField(null=True)
+    price_20gp = IntegerField(null=True)
+    price_40gp = IntegerField(null=True)
+    price_40hq = IntegerField(null=True)
+
+    class Meta:
+        db_table = 'ufsoo'
+
+
 def create_tables():
-    db.create_tables([TableWlg, TableJc56, TableBfb56], safe=True)
+    db.create_tables([TableWlg, TableJc56, TableBfb56, TableUfsoo], safe=True)

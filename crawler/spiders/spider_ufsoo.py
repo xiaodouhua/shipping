@@ -24,13 +24,13 @@ class SpiderUfsooFull(scrapy.Spider):
         yield scrapy.Request(
             'http://www.ufsoo.com/fcl',
             headers={'Referer': 'http://www.ufsoo.com/'},
-            callback=self.parse_route
+            callback=self.parse_starting_port
         )
 
-    def parse_route(self, response):
-        # 获取所有航线第一页
+    def parse_starting_port(self, response):
+        # 获取所有起始港第一页
         for url in response.xpath(
-                '//ul[preceding-sibling::h4[contains(text(),"航线")]]//a[@title]/@href').extract():
+                '//ul[preceding-sibling::h4[contains(text(),"起运港")]]//a[@title]/@href').extract():
             yield scrapy.Request('http://www.ufsoo.com' + url.strip(), headers={'Referer': 'http://www.ufsoo.com/fcl/'},
                                  callback=self.parse_index)
 

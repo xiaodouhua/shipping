@@ -24,5 +24,9 @@ ITEM_PIPELINES = {
     'crawler.pipelines.PipelineUfsoo': 303
 }
 
+# DOWNLOADER_MIDDLEWARES = {
+#     'crawler.middlewares.UfsooDownloadMiddleware': 543,
+# }
+
 LOG_FILE = 'shipping.log'
 LOG_LEVEL = 'INFO'

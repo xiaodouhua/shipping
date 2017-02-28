@@ -17,6 +17,8 @@ def safe_to_int(string):
 class SpiderUfsooFull(scrapy.Spider):
     name = "ufsoo_full"
 
+    auto_paginate = True
+
     def start_requests(self):
         # 访问查询首页，用来获取航线链接，然后根据航线进行爬取
         yield scrapy.Request(
@@ -34,15 +36,16 @@ class SpiderUfsooFull(scrapy.Spider):
 
     def parse_index(self, response):
         # 翻页
-        next_page = response.xpath('//a[@title="下一页"]/@onclick').extract_first()
-        if next_page:
-            url = re.search("GoToPage\('(.*?\.html)'\)", next_page)
-            if url:
-                yield scrapy.Request(
-                    'http://www.ufsoo.com' + url.group(1).strip(),
-                    headers={'Referer': response.url},
-                    callback=self.parse_index
-                )
+        if self.auto_paginate:
+            next_page = response.xpath('//a[@title="下一页"]/@onclick').extract_first()
+            if next_page:
+                url = re.search("GoToPage\('(.*?\.html)'\)", next_page)
+                if url:
+                    yield scrapy.Request(
+                        'http://www.ufsoo.com' + url.group(1).strip(),
+                        headers={'Referer': response.url},
+                        callback=self.parse_index
+                    )
 
         # 报价详情
         for url in response.xpath('//table[@id="tableprice"]/tr/td/h3/a/@href').extract():
@@ -52,13 +55,13 @@ class SpiderUfsooFull(scrapy.Spider):
                 callback=self.parse_item
             )
 
-        # 历史报价第一页 (全是重复的)
-        # for url in response.xpath('//a[child::input[@class="checkhistorybtn"]]/@href').extract():
-        #     yield scrapy.Request(
-        #         'http://www.ufsoo.com' + url.strip(),
-        #         headers={'Referer': response.url},
-        #         callback=self.parse_index
-        #     )
+            # 历史报价第一页 (全是重复的)
+            # for url in response.xpath('//a[child::input[@class="checkhistorybtn"]]/@href').extract():
+            #     yield scrapy.Request(
+            #         'http://www.ufsoo.com' + url.strip(),
+            #         headers={'Referer': response.url},
+            #         callback=self.parse_index
+            #     )
 
     def parse_item(self, response):
 
@@ -117,3 +120,23 @@ class SpiderUfsooFull(scrapy.Spider):
             date_cut_off=safe_strip(date_cut_off), date_set_sail=safe_strip(date_set_sail),
             price_20gp=safe_to_int(price_20gp), price_40gp=safe_to_int(price_40gp), price_40hq=safe_to_int(price_40hq)
         )
+
+
+class SpiderUfsoo(SpiderUfsooFull):
+    name = 'ufsoo'
+    auto_paginate = False
+
+    starting_ports = ['SHANGHAI', 'SHENZHEN', 'GUANGZHOU', 'NINGBO',
+                      'QINGDAO', 'DALIAN', 'XIAMEN', 'LIANYUNGANG',
+                      'HONG KONG', 'TIANJIN', 'FUZHOU', 'FOSHAN',
+                      'ZHUHAI', 'ZHANJIANG', 'HAIKOU', 'WUHAN']
+
+    def start_requests(self):
+        for port in self.starting_ports:
+            for i in range(1, 6):
+                yield scrapy.Request(
+                    'http://www.ufsoo.com/fcl/price-{:s}-0-0-0-0-{:d}.html'.format(port, i),
+                    headers={'Referer': 'http://www.ufsoo.com/fcl/price-{:s}-0-0-0-0-{:d}.html'
+                        .format(port, i if i > 1 else 2)},
+                    callback=self.parse_index
+                )

@@ -2,7 +2,8 @@ import logging
 from peewee import IntegrityError
 from crawler.models import TableWlg, TableJc56, TableBfb56, TableUfsoo
 
-from crawler.spiders import SpiderWlg, SpiderJc56, SpiderJc56Full, SpiderBfb56, SpiderBfb56Full, SpiderUfsooFull
+from crawler.spiders import SpiderWlg, SpiderJc56, SpiderJc56Full, \
+    SpiderBfb56, SpiderBfb56Full, SpiderUfsooFull, SpiderUfsoo
 
 
 class PipelineWlg(object):
@@ -52,7 +53,7 @@ class PipelineUfsoo(object):
         self.logger = logging.getLogger('PipelineUfsoo')
 
     def process_item(self, item, spider):
-        if spider.name in [SpiderUfsooFull.name]:
+        if spider.name in [SpiderUfsooFull.name, SpiderUfsoo.name]:
             try:
                 TableUfsoo.create(**dict(item))
                 self.logger.info("Got item. uid:{:s}".format(item['uid']))
